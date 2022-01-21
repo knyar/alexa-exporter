@@ -99,10 +99,11 @@ def hello_world():
         registry.register(AirMonitorCollector(request.args['id']))
         return generate_latest(registry)
     except RuntimeError as e:
+        app.logger.error(str(e))
         return str(e), 500
 
 
 if __name__ == "__main__":
     # check that environment variables are set.
     cookies()
-    app.run()
+    app.run(host="0.0.0.0")

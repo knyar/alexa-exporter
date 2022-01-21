@@ -91,7 +91,7 @@ class AirMonitorCollector(object):
 
 
 @app.route("/air_monitor")
-def hello_world():
+def air_monitor():
     if "id" not in request.args:
         return "Expected `id` parameter with device id", 400
     try:

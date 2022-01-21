@@ -44,3 +44,29 @@ as an `id` URL parameter:
 ```bash
 curl '127.0.0.1:5000/air_monitor?id=AAA_SonarCloudService_...'
 ```
+
+### Configuring Prometheus
+
+After you get the exporter running, you can add it as a Prometheus target.
+For example:
+
+```yaml
+- job_name: alexa_exporter
+  metrics_path: /air_monitor
+  static_configs:
+  - targets:
+    - living_room,AAA_SonarCloudService_...
+  relabel_configs:
+  - source_labels: [__address__]
+    regex: (.*),.*
+    target_label: instance
+    replacement: ${1}
+  - source_labels: [__address__]
+    regex: .*,(.*)
+    target_label: __param_id
+    replacement: ${1}
+  - source_labels: []
+    regex: .*
+    target_label: __address__
+    replacement: 127.0.0.1:5000
+```

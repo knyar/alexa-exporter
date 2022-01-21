@@ -1,0 +1,46 @@
+# Prometheus exporter for Amazon Smart Air Quality Monitor
+
+This exporter uses private Amazon Alexa API to collect air quality measurements
+reported by Amazon Smart Air Quality Monitor
+
+## Running
+
+### Getting Appliance ID
+
+Visit https://alexa.amazon.co.uk/api/phoenix/group and identify the appliance
+ID of your air monitor. It probably begins with "AAA_SonarCloudService_".
+
+### Getting the Amazon session cookies
+
+Since there is no public API available for collecting this data, we use a set
+of browser session cookies to authenticate with Alexa API. Please treat these
+cookies as secrets, since they give access to your Amazon account.
+
+Visit https://alexa.amazon.co.uk/api/phoenix/group with developer tools enabled
+in your browser and record the value of the following cookies:
+
+- at-acbuk
+- ubid-acbuk
+
+### Installing dependencies
+
+```bash
+pip install pipenv
+pipenv install
+```
+
+### Running the exporter
+
+```bash
+AT_ACBUK='at-acbuk-cookie-value' UBID_ACBUK='ubid-acbuk-cookie-value' pipenv run python app.py
+```
+
+### Testing
+
+Before configuring the exporter as a Prometheus target, verify that metrics get
+collected successfully by sending a request with your monitor's appliance ID
+as an `id` URL parameter:
+
+```bash
+curl '127.0.0.1:5000/air_monitor?id=AAA_SonarCloudService_...'
+```
